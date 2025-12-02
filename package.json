@@ -1,0 +1,48 @@
+{
+  "name": "nestjs-knife4j-plus",
+  "version": "0.0.2",
+  "description": "NestJS Knife4j integration for enhanced Swagger/OpenAPI documentation with support for both Express and Fastify adapters. Provides a powerful API documentation UI based on Knife4j.",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "keywords": [
+    "nestjs",
+    "knife4j",
+    "swagger",
+    "openapi"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jkhuangfu/nestjs-knife4j-plus.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "build-js": "tsc -p tsconfig.js.json",
+    "build-dts": "tsc -p tsconfig.dts.json",
+    "build": "npm run build-js && npm run build-dts"
+  },
+  "files": [
+    "/ui",
+    "/dist"
+  ],
+  "author": "jkhuangfu",
+  "devDependencies": {
+    "@types/node": "^20.14.12",
+    "typescript": "^5.5.4"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "*",
+    "@fastify/static": "*",
+    "express": "*",
+    "fastify": "*"
+  },
+  "peerDependenciesMeta": {
+    "@fastify/static": {
+      "optional": true
+    },
+    "fastify": {
+      "optional": true
+    }
+  }
+}
