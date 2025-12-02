@@ -42,7 +42,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options)
   SwaggerModule.setup('api', app, document)
 
-  // if you want to use express adapter, you can use the following code
   knife4jSetup(app, [
     {
       name: '2.0 version',
