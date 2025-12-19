@@ -55,4 +55,26 @@ async function bootstrap() {
 
 then you can browse on [http://127.0.0.1:3000/doc.html](http://127.0.0.1:3000/doc.html)
 
+明白。下面是**具体内容中英文完全对照**、且**排版规范、适合直接放入 README.md** 的版本。中英文分行展示，清晰、不混写，符合产品发布与 Changelog 的常见实践。
+
+---
+
 ## 📈 Changelog
+
+### [1.0.2] — 2025-12-19
+
+#### ✨ Added
+
+- **新增文件拖拽上传功能**
+  支持通过拖拽方式快速上传文件，显著提升文件上传效率与整体使用体验。
+
+- **Drag-and-drop file upload support**
+  Enables quick file uploads via drag-and-drop interactions, significantly improving upload efficiency and overall user experience.
+
+#### 🎨 Improved
+
+- **界面样式优化**
+  对部分页面样式与交互细节进行优化，提升整体视觉一致性与使用流畅度。
+
+- **UI and style enhancements**
+  Refined selected UI styles and interaction details to improve visual consistency and overall usability.
