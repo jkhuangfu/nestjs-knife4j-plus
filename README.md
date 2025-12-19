@@ -55,10 +55,6 @@ async function bootstrap() {
 
 then you can browse on [http://127.0.0.1:3000/doc.html](http://127.0.0.1:3000/doc.html)
 
-明白。下面是**具体内容中英文完全对照**、且**排版规范、适合直接放入 README.md** 的版本。中英文分行展示，清晰、不混写，符合产品发布与 Changelog 的常见实践。
-
----
-
 ## 📈 Changelog
 
 ### [1.0.2] — 2025-12-19
