@@ -57,6 +57,14 @@ then you can browse on [http://127.0.0.1:3000/doc.html](http://127.0.0.1:3000/do
 
 ## 📈 Changelog
 
+### [1.0.4] - 2026-01-12
+
+#### 🐛 Fix
+
+- **修复多文件上传无法正常解析问题**
+
+- **Fix multiple file uploads cannot be parsed correctly**
+
 ### [1.0.2] — 2025-12-19
 
 #### ✨ Added

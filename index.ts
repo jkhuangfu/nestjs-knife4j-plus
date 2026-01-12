@@ -61,7 +61,7 @@ export async function knife4jSetup(app: INestApplication, services: Service[]) {
         res.send(services)
       })
     } catch (error) {
-      throw new Error('Express is not installed')
+      throw new Error('express is not installed please install it first ?, run `npm install express` or `yarn add express` try again')
     }
     return
   }
@@ -77,6 +77,6 @@ export async function knife4jSetup(app: INestApplication, services: Service[]) {
       repl.send(services)
     })
   } catch (error) {
-    throw new Error('@fastify/static is not installed please install it first , run `npm install @fastify/static` or `yarn add @fastify/static`')
+    throw new Error('@fastify/static is not installed please install it first? , run `npm install @fastify/static` or `yarn add @fastify/static` try again')
   }
 }
