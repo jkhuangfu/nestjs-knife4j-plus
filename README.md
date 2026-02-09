@@ -40,6 +40,8 @@ async function bootstrap() {
     .addTag('cats')
     .build()
   const document = SwaggerModule.createDocument(app, options)
+  // 如果想自定义访问路径前缀，需要在 Swagger 配置中开启全局前缀（useGlobalPrefix:true）同时 knife4jSetup 也需要配置全局前缀(knife4jSetup第三个参数为前缀)
+  // app.setGlobalPrefix('customerPrefix')
   SwaggerModule.setup('api', app, document)
 
   knife4jSetup(app, [
@@ -48,14 +50,25 @@ async function bootstrap() {
       url: `/api-json`,
     },
   ])
-
   await app.listen(3000)
 }
 ```
 
 then you can browse on [http://127.0.0.1:3000/doc.html](http://127.0.0.1:3000/doc.html)
 
+if you set customerPrefix, then in Knife4j UI, the path to access will be '/customerPrefix/doc.html'
+
 ## 📈 Changelog
+
+### [1.0.5] - 2026-02-09
+
+#### ✨ feature [issues/1](https://github.com/jkhuangfu/nestjs-knife4j-plus/issues/1)
+
+- **新增自定义路径前缀支持**
+  支持在 Knife4j UI 中配置自定义访问路径前缀，方便在不同路径下部署。
+
+- **Add custom path prefix support**
+  Allows configuring custom path prefixes for Knife4j UI, enabling deployment under different paths.
 
 ### [1.0.4] - 2026-01-12
 
