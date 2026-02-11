@@ -3,10 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.knife4jSetup = knife4jSetup;
 const node_path_1 = require("node:path");
 async function knife4jSetup(app, services, prefix = '/') {
-    let prefixStr = prefix.trim();
-    if (!prefixStr.startsWith('/')) {
-        prefixStr = '/' + prefixStr;
-    }
+    const trimmedPrefix = prefix.trim();
+    const prefixStr = trimmedPrefix.startsWith('/') ? trimmedPrefix : '/' + trimmedPrefix;
+    const normalizedPrefix = prefixStr.endsWith('/') ? prefixStr : prefixStr + '/';
+    const servicePath = normalizedPrefix + 'services.json';
     const httpAdapter = app.getHttpAdapter().getType();
     const instance = app.getHttpAdapter().getInstance();
     if (!['express', 'fastify'].includes(httpAdapter)) {
@@ -16,7 +16,7 @@ async function knife4jSetup(app, services, prefix = '/') {
         try {
             const expressStatic = await Promise.resolve().then(() => require('express')).then((mod) => mod.static);
             app.use(prefixStr, expressStatic((0, node_path_1.resolve)(__dirname, '../ui/')));
-            app.use('/services.json', (_, res) => {
+            app.use(servicePath, (_, res) => {
                 res.send(services);
             });
         }
@@ -32,7 +32,7 @@ async function knife4jSetup(app, services, prefix = '/') {
             prefix: prefixStr,
             decorateReply: false,
         });
-        instance.get('/services.json', (_, repl) => {
+        instance.get(servicePath, (_, repl) => {
             repl.send(services);
         });
     }

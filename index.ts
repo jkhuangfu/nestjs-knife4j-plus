@@ -52,11 +52,12 @@ export interface Service {
  * ```
  */
 export async function knife4jSetup(app: INestApplication, services: Service[], prefix: string = '/') {
-  // 配置路径前缀
-  let prefixStr = prefix.trim()
-  if (!prefixStr.startsWith('/')) {
-    prefixStr = '/' + prefixStr
-  }
+  // 配置路径前缀，确保以'/'开头
+  const trimmedPrefix = prefix.trim()
+  const prefixStr = trimmedPrefix.startsWith('/') ? trimmedPrefix : '/' + trimmedPrefix
+  // 拼接services.json
+  const normalizedPrefix = prefixStr.endsWith('/') ? prefixStr : prefixStr + '/'
+  const servicePath = normalizedPrefix + 'services.json'
   const httpAdapter = app.getHttpAdapter().getType()
   const instance = app.getHttpAdapter().getInstance()
   if (!['express', 'fastify'].includes(httpAdapter)) {
@@ -66,7 +67,7 @@ export async function knife4jSetup(app: INestApplication, services: Service[], p
     try {
       const expressStatic = await import('express').then((mod) => mod.static)
       app.use(prefixStr, expressStatic(resolve(__dirname, '../ui/')))
-      app.use('/services.json', (_: any, res: any) => {
+      app.use(servicePath, (_: any, res: any) => {
         res.send(services)
       })
     } catch (error) {
@@ -82,7 +83,7 @@ export async function knife4jSetup(app: INestApplication, services: Service[], p
       prefix: prefixStr,
       decorateReply: false,
     })
-    instance.get('/services.json', (_: any, repl: any) => {
+    instance.get(servicePath, (_: any, repl: any) => {
       repl.send(services)
     })
   } catch (error) {

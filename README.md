@@ -60,14 +60,21 @@ if you set customerPrefix, then in Knife4j UI, the path to access will be '/cust
 
 ## 📈 Changelog
 
+### [1.0.7] - 2026-02-11
+
+#### 🐛 Fix
+
+- **修复使用自定义前缀的时候，UI层配置信息请求路径问题**
+
+- **Fix the issue with the request path for UI layer configuration information when using a custom prefix.**
+
 ### [1.0.6] - 2026-02-09
 
 #### 🐛 Fix
+
 - **修复在自定义路径前缀下访问 Knife4j UI 时，请求路径多一层path的问题**
 
 - **Fix the issue of an extra layer of path in request paths when accessing the Knife4j UI under a custom path prefix**
-
-
 
 ### [1.0.5] - 2026-02-09
 

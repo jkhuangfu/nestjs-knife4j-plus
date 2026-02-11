@@ -1,6 +1,6 @@
 {
   "name": "nestjs-knife4j-plus",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "NestJS Knife4j integration for enhanced Swagger/OpenAPI documentation with support for both Express and Fastify adapters. Provides a powerful API documentation UI based on Knife4j.",
   "main": "dist/index.js",
   "license": "MIT",
@@ -20,7 +20,9 @@
   "scripts": {
     "build-js": "tsc -p tsconfig.js.json",
     "build-dts": "tsc -p tsconfig.dts.json",
-    "build": "npm run build-js && npm run build-dts"
+    "build-front": "cd front && npm run build",
+    "build-server": "npm run build-js && npm run build-dts",
+    "build": "npm run build-front && npm run build-server"
   },
   "files": [
     "/ui",
