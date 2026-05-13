@@ -60,6 +60,13 @@ if you set customerPrefix, then in Knife4j UI, the path to access will be '/cust
 
 ## 📈 Changelog
 
+### [1.0.8] - 2026-05-12
+
+#### 🐛 Fix
+
+- **修复新增OAS3规范下allOf组合schema的解析能力**
+- **add support for parsing allOf schema in OAS3**
+
 ### [1.0.7] - 2026-02-11
 
 #### 🐛 Fix
