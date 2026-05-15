@@ -59,6 +59,12 @@ then you can browse on [http://127.0.0.1:3000/doc.html](http://127.0.0.1:3000/do
 if you set customerPrefix, then in Knife4j UI, the path to access will be '/customerPrefix/doc.html'
 
 ## 📈 Changelog
+### [1.0.9] - 2026-05-15
+
+#### 🐛 Fix
+
+- **修复OAS3规范下allOf组合schema的响应示例解析能力**
+- **Fix the issue with parsing response examples for allOf schema in OAS3.**
 
 ### [1.0.8] - 2026-05-12
 
