@@ -48,4 +48,4 @@ export interface Service {
  * bootstrap();
  * ```
  */
-export declare function knife4jSetup(app: INestApplication, services: Service[], prefix?: string): Promise<void>;
+export declare function knife4jSetup(app: INestApplication, services: readonly Service[], prefix?: string): Promise<void>;
