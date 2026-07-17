@@ -2,7 +2,16 @@
   "name": "nestjs-knife4j-plus",
   "version": "1.0.10",
   "description": "NestJS Knife4j integration for enhanced Swagger/OpenAPI documentation with support for both Express and Fastify adapters. Provides a powerful API documentation UI based on Knife4j.",
-  "main": "dist/index.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/cjs/index.js",
+      "import": "./dist/esm/index.js"
+    }
+  },
   "license": "MIT",
   "keywords": [
     "nestjs",
@@ -18,12 +27,10 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "build-js": "tsc -p tsconfig.js.json",
-    "build-dts": "tsc -p tsconfig.dts.json",
-    "build-front": "cd front && npm run build",
-    "build-server": "npm run build-js && npm run build-dts",
-    "build": "npm run build-front && npm run build-server",
-    "typecheck": "tsc -p tsconfig.build.json"
+    "build": "node scripts/build.js build",
+    "build-server": "node scripts/build.js build-server",
+    "build-front": "node scripts/build.js build-front",
+    "typecheck": "node scripts/build.js typecheck"
   },
   "files": [
     "/ui",
@@ -32,11 +39,12 @@
   "author": "jkhuangfu",
   "devDependencies": {
     "@types/node": "^20.14.12",
+    "esbuild": "^0.28.1",
     "typescript": "^5.5.4"
   },
   "peerDependencies": {
-    "@nestjs/common": "*",
     "@fastify/static": "*",
+    "@nestjs/common": "*",
     "express": "*",
     "fastify": "*"
   },

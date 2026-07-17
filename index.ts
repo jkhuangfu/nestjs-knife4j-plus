@@ -4,7 +4,8 @@ import type { NextFunction, Request, Response } from 'express'
 // the emitted JavaScript, so consumers that only use Express do not need it.
 // @ts-expect-error
 import type { FastifyRequest, FastifyReply } from 'fastify'
-import { resolve } from 'node:path'
+import { resolve, dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 /**
  * 服务配置接口
@@ -44,7 +45,19 @@ function stripTrailingSlash(prefix: string): string {
   return prefix.length > 1 && prefix.endsWith('/') ? prefix.slice(0, -1) : prefix
 }
 
-/** 统一生成 "package is not installed" 错误信息 */
+function getDirname(): string {
+  try {
+    // @ts-ignore import.meta 仅在 ESM 环境可用
+    return dirname(fileURLToPath(import.meta.url))
+  } catch {
+    // @ts-ignore __dirname 仅在 CJS 环境可用
+    return __dirname
+  }
+}
+
+/**
+ * 统一生成 "package is not installed" 错误信息
+ */
 function notInstalledError(pkg: string): Error {
   return new Error(`${pkg} is not installed. Please run \`npm install ${pkg}\` or \`yarn add ${pkg}\` and try again.`)
 }
@@ -136,7 +149,7 @@ export async function knife4jSetup(
   const adapter = app.getHttpAdapter()
   const httpAdapter = adapter.getType()
   const instance = adapter.getInstance()
-  const uiPath = resolve(__dirname, '../ui/')
+  const uiPath = resolve(getDirname(), '../ui/')
 
   if (httpAdapter === 'express') {
     let expressStatic: (typeof import('express'))['static']
