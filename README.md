@@ -59,6 +59,14 @@ then you can browse on [http://127.0.0.1:3000/doc.html](http://127.0.0.1:3000/do
 if you set customerPrefix, then in Knife4j UI, the path to access will be '/customerPrefix/doc.html'
 
 ## 📈 Changelog
+
+### [1.0.10] - 2026-10-29
+
+#### ✨ feature
+
+- **支持 @nestjs/platform-node 适配器**
+- **Add support for @nestjs/platform-node adapter**
+
 ### [1.0.9] - 2026-05-15
 
 #### 🐛 Fix

@@ -37,11 +37,15 @@
   "peerDependencies": {
     "@nestjs/common": "*",
     "@fastify/static": "*",
+    "@nestjs/platform-node": "*",
     "express": "*",
     "fastify": "*"
   },
   "peerDependenciesMeta": {
     "@fastify/static": {
+      "optional": true
+    },
+    "@nestjs/platform-node": {
       "optional": true
     },
     "fastify": {

@@ -3,91 +3,78 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.knife4jSetup = knife4jSetup;
 const node_path_1 = require("node:path");
 function normalizePrefix(prefix) {
-    if (typeof prefix !== 'string') {
+    if (typeof prefix !== 'string')
         throw new TypeError('prefix must be a string');
-    }
     const trimmed = prefix.trim().replace(/\/{2,}/g, '/');
     const withLeading = trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
-    return withLeading.endsWith('/') ? withLeading : withLeading + '/';
+    return withLeading.endsWith('/') ? withLeading : `${withLeading}/`;
 }
-function stripTrailingSlash(prefix) {
-    return prefix.length > 1 && prefix.endsWith('/') ? prefix.slice(0, -1) : prefix;
-}
-function notInstalledError(pkg) {
-    return new Error(`${pkg} is not installed. Please run \`npm install ${pkg}\` or \`yarn add ${pkg}\` and try again.`);
-}
+const stripTrailingSlash = (p) => p.length > 1 && p.endsWith('/') ? p.slice(0, -1) : p;
+const notInstalled = (pkg) => new Error(`${pkg} is not installed. Run \`npm install ${pkg}\` (or pnpm/yarn add ${pkg}) and try again.`);
 function isMissingModuleError(error, pkg) {
-    if (typeof error !== 'object' || error === null || !('code' in error) || !('message' in error)) {
+    if (typeof error !== 'object' || error === null || !('code' in error))
         return false;
-    }
     const { code, message } = error;
     return ((code === 'MODULE_NOT_FOUND' || code === 'ERR_MODULE_NOT_FOUND') &&
         typeof message === 'string' &&
-        (message.includes(`'${pkg}'`) || message.includes(`\"${pkg}\"`)));
+        (message.includes(`'${pkg}'`) || message.includes(`"${pkg}"`)));
+}
+async function loadPeerPackage(pkg) {
+    try {
+        return (await Promise.resolve(`${pkg}`).then(s => require(s)));
+    }
+    catch (error) {
+        if (isMissingModuleError(error, pkg))
+            throw notInstalled(pkg);
+        throw error;
+    }
 }
 function validateServices(services) {
     if (!Array.isArray(services) || services.length === 0) {
         throw new Error('services must be a non-empty array');
     }
-    return services.map((service, index) => {
-        if (!service || typeof service.name !== 'string' || service.name.trim() === '') {
-            throw new TypeError(`services[${index}].name must be a non-empty string`);
+    return services.map((s, i) => {
+        if (typeof s?.name !== 'string' || s.name.trim() === '') {
+            throw new TypeError(`services[${i}].name must be a non-empty string`);
         }
-        if (!service || typeof service.url !== 'string' || service.url.trim() === '') {
-            throw new TypeError(`services[${index}].url must be a non-empty string`);
+        if (typeof s?.url !== 'string' || s.url.trim() === '') {
+            throw new TypeError(`services[${i}].url must be a non-empty string`);
         }
-        return { name: service.name.trim(), url: service.url.trim() };
+        return { name: s.name.trim(), url: s.url.trim() };
     });
 }
 async function knife4jSetup(app, services, prefix = '/') {
-    const validatedServices = validateServices(services);
+    const validated = validateServices(services);
     const dynamicPrefix = normalizePrefix(prefix);
     const staticPrefix = stripTrailingSlash(dynamicPrefix);
-    const servicePath = dynamicPrefix + 'services.json';
+    const servicePath = `${dynamicPrefix}services.json`;
     const adapter = app.getHttpAdapter();
-    const httpAdapter = adapter.getType();
-    const instance = adapter.getInstance();
-    const uiPath = (0, node_path_1.resolve)(__dirname, '../ui/');
-    if (httpAdapter === 'express') {
-        let expressStatic;
-        try {
-            ;
-            ({ static: expressStatic } = await Promise.resolve().then(() => require('express')));
-        }
-        catch (error) {
-            if (isMissingModuleError(error, 'express')) {
-                throw notInstalledError('express');
-            }
-            throw error;
-        }
-        const expressApp = instance;
-        expressApp.get(servicePath, (_req, res) => {
-            res.json(validatedServices);
-        });
-        expressApp.use(dynamicPrefix, expressStatic(uiPath));
-        return;
+    const type = adapter.getType();
+    const server = adapter.getInstance();
+    const uiRoot = (0, node_path_1.resolve)(__dirname, '../ui/');
+    server.get(servicePath, (_req, res) => {
+        if (type === 'express')
+            res.json(validated);
+        else
+            res.send(validated);
+    });
+    if (type === 'express') {
+        const { static: serveStatic } = await loadPeerPackage('express');
+        server.use(dynamicPrefix, serveStatic(uiRoot));
     }
-    if (httpAdapter === 'fastify') {
-        let fastifyStatic;
-        try {
-            fastifyStatic = await Promise.resolve().then(() => require('@fastify/static'));
-        }
-        catch (error) {
-            if (isMissingModuleError(error, '@fastify/static')) {
-                throw notInstalledError('@fastify/static');
-            }
-            throw error;
-        }
-        const fastifyApp = instance;
-        fastifyApp.get(servicePath, (_req, reply) => {
-            reply.send(validatedServices);
-        });
-        await fastifyApp.register(fastifyStatic.default, {
-            root: uiPath,
+    else if (type === 'fastify') {
+        const mod = await loadPeerPackage('@fastify/static');
+        await server.register(mod.default, {
+            root: uiRoot,
             prefix: staticPrefix,
             decorateReply: false,
         });
-        return;
     }
-    throw new Error(`Unsupported HTTP adapter: "${httpAdapter}". Only "express" and "fastify" are supported.`);
+    else if (type === 'node') {
+        ;
+        app.useStaticAssets(uiRoot, { prefix: dynamicPrefix });
+    }
+    else {
+        throw new Error(`Unsupported HTTP adapter: "${type}". Only "express", "fastify" and "node" are supported.`);
+    }
 }
